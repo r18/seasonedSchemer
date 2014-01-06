@@ -83,5 +83,40 @@
 		  (cons (car tup) rev-pre))
 	    (scramble-b (cdr tup)
 			(cons (car tup) rev-pre)))))))
-		    
-		       
+
+;; chapter 12
+
+(define Y
+  (lambda (le)
+     ((lambda (f) (f f))
+      (lambda (f)
+	(le (lambda (x) ((f f) x)))))))
+
+(define multirember
+  (lambda (a lat)
+    ((Y (lambda (mr)
+	  (lambda (lat)
+	    (cond
+	     ((null? lat) '())
+	     ((eq? a (car lat))
+	      (mr (cdr lat)))
+	     (else (cons (car lat)
+			 (mr (cdr lat))))))))
+     lat)))
+       
+(define multirember-b 
+  (lambda (a lat)
+    ((letrec
+	 ((mr (lambda (lat)
+		(cond
+		 ((null? lat) '())
+		 ((eq? a (car lat))
+		  (mr (cdr lat)))
+		 (else 
+		  (cons (car lat)
+			(mr (cdr lat))))))))
+     mr)
+    lat)))
+
+
+		 
