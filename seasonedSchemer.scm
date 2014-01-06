@@ -2,6 +2,8 @@
   (lambda (x)
     (and (not (pair? x)) (not (null? x)))))
 
+;; chapter 11 
+
 (define member?
   (lambda (a lat)
     (cond 
@@ -22,4 +24,64 @@
      ((null? lat) #f)
      (else (eq? (car lat) a)))))
 
+(define two-in-a-row-b?
+  (lambda (lat)
+    (cond 
+     ((null? lat) #f)
+     (else 
+      (is-first-b? (car lat) (cdr lat))))))
 
+(define is-first-b?
+  (lambda (a lat)
+    (cond 
+     ((null? lat) #f)
+     (else (or (eq? (car lat) a)
+	       (two-in-a-row-b? lat))))))
+
+(define two-in-a-row-c?
+  (lambda (preceeding lat)
+    (cond 
+     ((null? lat) #f)
+     (else (or (eq? (car lat) preceeding)
+	       (two-in-a-row-c? (car lat) (cdr lat)))))))
+
+(define two-in-a-row-r?
+  (lambda (lat)
+    (cond
+     ((null? lat) #f)
+     (else (two-in-a-row-c? (car lat) (cdr lat))))))
+
+(define sum-of-prefixes 
+  (lambda (tup)
+    (cond
+     ((null? tup) '())
+     (else 
+
+      ))))
+
+(define sum-of-prefixes-b
+  (lambda (sonssf tup)
+    (cond
+     ((null? tup) '())
+     (else (cons (+ sonssf (car tup))
+		 (sum-of-prefixes-b
+		  (+ sonssf (car tup))
+		  (cdr tup)))))))
+
+(define pick 
+  (lambda (n lat)
+    (cond
+     ((eq? 1 n) (car lat))
+     (else (pick (- n 1) (cdr lat))))))
+
+(define scramble-b
+  (lambda (tup rev-pre)
+    (cond
+     ((null? tup) '())
+     (else
+      (cons (pick (car tup)
+		  (cons (car tup) rev-pre))
+	    (scramble-b (cdr tup)
+			(cons (car tup) rev-pre)))))))
+		    
+		       
