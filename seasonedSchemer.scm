@@ -280,5 +280,93 @@
 	      (R lat)))))
 
 ;;chapter 14
-	
 
+(define rember1*
+  (lambda (a l)
+    (letrec
+	((R (lambda (l)
+	      (cond
+	       ((null? l) '())
+	       ((atom? (car l))
+		(cond 
+		 ((eq? (car l) a) (cdr l))
+		 (else
+		  (cons (car l) (R (cdr l))))))
+	       (else
+		(let ((av (R (car l))))
+		  (cond
+		   ((eqlist? (R (car l)) (car l))
+		    (cons (car l) (R (cdr l))))
+		   (else (cons (R (car l)) (cdr l))))))))))
+      (R l))))
+
+(define eqlist?
+  (lambda (l1 l2)
+    (cond
+     ((and (null? l1) (null? l2)) #t)
+     ((or (null? l1) (null? l2)) #f)
+     (else
+      (and (equal? (car l1) (car l2))
+	   (eqlist? (cdr l1) (cdr l2)))))))
+
+
+(define depth1*
+  (lambda (l)
+    (cond
+     ((null? l) 1)
+     ((atom? (car l))
+      (depth1* (cdr l)))
+     (else
+      (let ((d (depth1* (cdr l)))
+	    (a (+ 1 (depth1* (car l)))))
+	(if (> d a) d a))))))
+
+    
+(define max
+  (lambda (m n)
+    (if (> m n) m n)))
+
+
+(define leftmost*
+  (lambda (l)
+    (let/cc skip
+	    (letrec
+		((lm (lambda (l)
+		       (cond
+			((null? l) '())
+			((atom? (car l)) (skip (car l)))
+			(else 
+			 (begin
+			   (lm (car l))
+			   (lm (cdr l))))))))
+	      (lm l)))))
+
+(define rm
+  (lambda (a l oh)
+    (cond 
+     ((null? l) (oh '(no)))
+     ((atom? (car l))
+      (if (eq? (car l) a)
+	  (cdr l)
+	  (cons (car l)
+		(rm a (cdr l) oh))))
+     (else
+      (if (atom? 
+	   (let/cc oh
+		   (rm a  (car l) oh)))
+	  (cons　(car l)
+		 (rm a (cdr l) oh))
+	  (cons (rm a (car l) 0)
+		(cdr l)))))))
+			     
+    
+(define rember1-l*
+  (lambda (a l)
+    (try oh (rm a l oh) l)))
+
+
+(define-syntax try
+  (syntax-rules ()
+    ((try var a . b)
+     (let/cc success
+	     (let/cc var (success a)) . b))))
