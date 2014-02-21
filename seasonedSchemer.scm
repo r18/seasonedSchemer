@@ -370,3 +370,57 @@
     ((try var a . b)
      (let/cc success
 	     (let/cc var (success a)) . b))))
+
+;;chapter 15
+
+(define x 0)
+
+(define gourmand
+  (lambda (food)
+    (set! x food)
+    (cons food
+	  (cons x '()))))
+
+
+(define diner
+  (lambda (food)
+    (cons 'milkshake
+	  (cons food
+		'()))))
+
+(define omnivore
+  (let ((x 'minestrone))
+    (lambda (food)
+      (set! x food)
+      (cons food 
+	    (cons x '())))))
+
+(define gobbler
+  (let ((x 'minestrone))
+    (lambda (food)
+      (set! x food)
+      (cons food
+	    (cons x
+		  '())))))
+(define nibbler
+  (lambda (food)
+    (let ((x 'donut))
+      (set! x food)
+      (cons food
+	    (cons x '())))))
+
+(define food 'none)
+
+(define glutton
+  (lambda (x)
+    (set! food x)
+    (cons 'more
+	  (cons x
+		(cons 'more
+		      (cons x '()))))))
+			   
+(define chez-nous
+  (lambda ()
+    (let ((a food))
+      (set! food x)
+      (set! x a))))
